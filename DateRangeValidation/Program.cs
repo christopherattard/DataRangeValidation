@@ -12,7 +12,7 @@ namespace DateRangeValidation
         static void Main(string[] args)
         {
             DateRange night1 =  new DateRange("night1", new DateTime(2017, 1, 1, 0, 0, 0), new DateTime(2017, 6, 30, 7, 59, 59)); 
-            DateRange day =     new DateRange("day", new DateTime(2017, 1, 1, 7, 59, 59), new DateTime(2017, 6, 30, 19, 59, 59));             
+            DateRange day =     new DateRange("day", new DateTime(2017, 1, 1, 8, 0, 0), new DateTime(2017, 6, 30, 19, 59, 59));             
             DateRange night2 =  new DateRange("night2", new DateTime(2017, 1, 1, 20, 0, 0), new DateTime(2017, 6, 30, 23, 59, 59)); 
             List<DateRange> lst = new List<DateRange> { day, night1, night2 };
             CoverAllRates(lst);
@@ -35,7 +35,7 @@ namespace DateRangeValidation
             GetEarliestLatestRates(rates, out earliest, out latest);
             Console.WriteLine("Earliest: " + earliest + "     Latest: " + latest + "\r\n");
 
-            //Get boundaries
+            //Get boundaries - for each rate add the rate itself, 1 second before, 1 second after, 1 day before and 1 day after
             List<DateTime> boundaries = new List<DateTime>();
             foreach (DateRate r in rates)
             {
@@ -43,6 +43,10 @@ namespace DateRangeValidation
                 currentDate = r.From1.AddSeconds(-1);
                 if (currentDate >= earliest) boundaries.Add(currentDate);                
                 currentDate = r.From1.AddSeconds(1);
+                if (currentDate <= latest) boundaries.Add(currentDate);                
+                currentDate = r.From1.AddDays(-1);
+                if (currentDate >= earliest) boundaries.Add(currentDate);
+                currentDate = r.From1.AddDays(1);
                 if (currentDate <= latest) boundaries.Add(currentDate);
 
                 boundaries.Add(r.From2);
@@ -50,17 +54,29 @@ namespace DateRangeValidation
                 if (currentDate >= earliest) boundaries.Add(currentDate);
                 currentDate = r.From2.AddSeconds(1);
                 if (currentDate <= latest) boundaries.Add(currentDate);
+                currentDate = r.From2.AddDays(-1);
+                if (currentDate >= earliest) boundaries.Add(currentDate);
+                currentDate = r.From2.AddDays(1);
+                if (currentDate <= latest) boundaries.Add(currentDate);
 
                 boundaries.Add(r.To1);
                 currentDate = r.To1.AddSeconds(-1);
                 if (currentDate >= earliest) boundaries.Add(currentDate);
                 currentDate = r.To1.AddSeconds(1);
                 if (currentDate <= latest) boundaries.Add(currentDate);
+                currentDate = r.To1.AddDays(-1);
+                if (currentDate >= earliest) boundaries.Add(currentDate);
+                currentDate = r.To1.AddDays(1);
+                if (currentDate <= latest) boundaries.Add(currentDate);
 
                 boundaries.Add(r.To2);
                 currentDate = r.To2.AddSeconds(-1);
                 if (currentDate >= earliest) boundaries.Add(currentDate);
                 currentDate = r.To2.AddSeconds(1);
+                if (currentDate <= latest) boundaries.Add(currentDate);
+                currentDate = r.To2.AddDays(-1);
+                if (currentDate >= earliest) boundaries.Add(currentDate);
+                currentDate = r.To2.AddDays(1);
                 if (currentDate <= latest) boundaries.Add(currentDate);
             }
 
